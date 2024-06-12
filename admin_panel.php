@@ -66,10 +66,6 @@ $result = $conn->query($sql);
         <h4>Add User</h4>
         <!-- Add user form -->
       </div>
-      <div class="col-md-6">
-        <h4>Delete User</h4>
-        <!-- Delete user form -->
-      </div>
     </div>
   </div>
 </body>
