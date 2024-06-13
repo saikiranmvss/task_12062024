@@ -219,9 +219,10 @@ $result = $conn->query($sql);
       $("#addUserForm").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
+        formData.append('formName','create_user');
         $.ajax({
           type: "POST",
-          url: "create_user.php",
+          url: "edit_user.php",
           data: formData,
           processData: false,
           contentType: false,
@@ -239,6 +240,7 @@ $result = $conn->query($sql);
       $("#editUserForm").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
+        formData.append('formName','edit_user');
         $.ajax({
           type: "POST",
           url: "edit_user.php",
@@ -273,8 +275,8 @@ $result = $conn->query($sql);
       if (confirm("Are you sure you want to delete this user?")) {
         $.ajax({
           type: "POST",
-          url: "delete_user.php",
-          data: { id: userId },
+          url: "edit_user.php",
+          data: { id: userId , formName : 'delete_user'},
           success: function (response) {
             location.reload();
           },

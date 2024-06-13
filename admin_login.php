@@ -10,9 +10,9 @@ $hashedPasswordFromDatabase = password_hash("admin123", PASSWORD_DEFAULT);
 
 if ($email === "admin@example.com" && password_verify($password, $hashedPasswordFromDatabase)) {
     $_SESSION['admin_id'] = 1; // Set session ID or any other relevant data
-    echo "success";
+    echo 1;
 } else {
-    echo "error";
+    echo 0;
 }
 ?>
 

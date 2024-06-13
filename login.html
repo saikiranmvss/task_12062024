@@ -50,10 +50,15 @@
           type: "POST",
           data: formData,
           success: function(response) {
-            if (response === "success") {
+
+            if(response==1){
+              alert("Invalid Password");
+            }else if(response==2){
+              alert("Invalid Email");
+            }else if(response==3){
+              alert("Need to get Approval");
+            }else{
               window.location.href = "update_details.php";
-            } else {
-              alert("Invalid login credentials. Please try again.");
             }
           },
           error: function() {

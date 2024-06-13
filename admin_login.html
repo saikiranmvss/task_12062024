@@ -50,7 +50,7 @@
           type: "POST",
           data: formData,
           success: function(response) {
-            if (response === "success") {
+            if (response == 1) {
               window.location.href = "admin_panel.php";
             } else {
               alert("Invalid login credentials. Please try again.");
