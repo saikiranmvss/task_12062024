@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $employees = $conn->query("SELECT id, name FROM employees");
-?>
+?>  
 
 <!DOCTYPE html>
 <html lang="en">

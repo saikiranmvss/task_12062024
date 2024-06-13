@@ -1,15 +1,13 @@
 <?php
 session_start();
 
-// Check login credentials and set session if valid
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-// You need to retrieve the hashed password from the database based on the email
 $hashedPasswordFromDatabase = password_hash("superadmin123", PASSWORD_DEFAULT);
 
 if ($email === "superadmin@example.com" && password_verify($password, $hashedPasswordFromDatabase)) {
-    $_SESSION['superadmin_id'] = 1; // Set session ID or any other relevant data
+    $_SESSION['superadmin_id'] = 1;
     echo "success";
 } else {
     echo "error";

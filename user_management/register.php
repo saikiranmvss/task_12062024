@@ -71,7 +71,7 @@
       $("#registrationForm").on("submit", function(event) {
         event.preventDefault();
 
-        // Validate form fields
+
         var isValid = true;
         $("#registrationForm input").each(function() {
           if ($(this).val() === "") {

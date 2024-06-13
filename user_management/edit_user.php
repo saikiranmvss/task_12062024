@@ -2,7 +2,16 @@
 include 'db_connection.php';
 
 function sendResponse($conn, $message) {
-  $sql = "SELECT * FROM users";
+
+  if($message==0){
+    $sql = "SELECT * FROM users";
+  }else{
+
+    $user_id = $message;
+
+    $sql = "SELECT * FROM users where id = $user_id";
+  }
+  
   $result = $conn->query($sql);
   $users = [];
   
@@ -34,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $profile_picture = $_FILES['profile_picture']['name'];
   $signature = $_FILES['signature']['name'];
 
-  // File upload handling
+
   $target_dir = "uploads/";
   if (!empty($profile_picture)) {
     $profile_picture_target = $target_dir . basename($profile_picture);
@@ -45,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     move_uploaded_file($_FILES['signature']['tmp_name'], $signature_target);
   }
 
-  // Update query
   $sql = "UPDATE users SET name='$name', role='$role', mobile='$mobile', email='$email', address='$address', gender='$gender', dob='$dob', approved='$approved'";
   if (!empty($profile_picture)) {
     $sql .= ", profile_picture='$profile_picture'";
@@ -59,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $sql .= " WHERE id='$id'";
 
   if ($conn->query($sql) === TRUE) {
-    sendResponse($conn, "User updated successfully");
+    sendResponse($conn, $id);
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
@@ -70,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if($_POST['formName']=='create_user'){
 
-  $id = $_POST['id'];
+
   $name = $_POST['name'];
   $role = $_POST['role'];
   $mobile = $_POST['mobile'];
@@ -83,7 +91,7 @@ if($_POST['formName']=='create_user'){
   $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   $approved = $_POST['approved'];
 
-  // Upload files
+
   $target_dir = "uploads/";
   $profile_picture_target = $target_dir . basename($profile_picture);
   $signature_target = $target_dir . basename($signature);
@@ -94,7 +102,8 @@ if($_POST['formName']=='create_user'){
           VALUES ('$name', '$role', '$mobile', '$email', '$address', '$gender', '$dob', '$profile_picture', '$signature', '$password', '$approved')";
 
   if ($conn->query($sql) === TRUE) {
-    sendResponse($conn, "User created successfully");
+
+    sendResponse($conn, $conn->insert_id);
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
@@ -111,7 +120,7 @@ if($_POST['formName']=='delete_user'){
   $sql = "DELETE FROM users WHERE id='$id'";
 
   if ($conn->query($sql) === TRUE) {
-    sendResponse($conn, "User deleted successfully");
+    sendResponse($conn, 0);
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }

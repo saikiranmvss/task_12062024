@@ -1,16 +1,15 @@
 <?php
 session_start();
 
-// Check if admin is logged in, if not redirect to login page
 if (!isset($_SESSION['admin_id'])) {
   header("Location: admin_login.html");
   exit();
 }
 
-// Include database connection
+
 include 'db_connection.php';
 
-// Fetch all users
+
 $sql = "SELECT * FROM users";
 $result = $conn->query($sql);
 ?>
@@ -29,7 +28,7 @@ $result = $conn->query($sql);
     <div class="row mb-4">
       <div class="col-md-12">
         <h4>All Users</h4>
-        <!-- Display all users table -->
+        
         <table class="table table-striped">
           <thead>
             <tr>
@@ -64,7 +63,7 @@ $result = $conn->query($sql);
       <div class="col-md-4">
         <h4>Add User</h4>
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
-        <!-- Add user modal -->
+        
         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -134,7 +133,7 @@ $result = $conn->query($sql);
       </div>
       <div class="col-md-4">
         <h4>Edit User</h4>
-        <!-- Edit user modal -->
+      
         <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -205,7 +204,6 @@ $result = $conn->query($sql);
       </div>
       <div class="col-md-4">
         <h4>Delete User</h4>
-        <!-- Delete user functionality is handled by a confirmation dialog and AJAX -->
       </div>
     </div>
   </div>
@@ -236,7 +234,6 @@ $result = $conn->query($sql);
         });
       });
 
-      // Edit User Form Submission
       $("#editUserForm").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);

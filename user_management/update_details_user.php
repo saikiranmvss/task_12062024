@@ -7,13 +7,13 @@ if (!isset($_SESSION['user_id'])) {
 
 $servername = "localhost";
 $username = "root";
-$password = "";  // Update with your database password
-$dbname = "user_management";  // Update with your database name
+$password = "";  
+$dbname = "user_management"; 
 
-// Create connection
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
@@ -21,14 +21,13 @@ if ($conn->connect_error) {
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Sanitize input
   $name = $conn->real_escape_string($_POST['name']);
   $mobile = $conn->real_escape_string($_POST['mobile']);
   $address = $conn->real_escape_string($_POST['address']);
   $gender = $conn->real_escape_string($_POST['gender']);
   $dob = $conn->real_escape_string($_POST['dob']);
 
-  // Handle file uploads
+
   $profile_picture = '';
   if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
     $profile_picture = 'uploads/' . basename($_FILES['profile_picture']['name']);

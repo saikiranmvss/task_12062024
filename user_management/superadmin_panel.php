@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// Check if super admin is logged in, if not redirect to login page
-if (!isset($_SESSION['superadmin_id'])) {
-  header("Location: superadmin_login.html");
+// Check if admin is logged in, if not redirect to login page
+if (!isset($_SESSION['admin_id'])) {
+  header("Location: admin_login.html");
   exit();
 }
 
@@ -30,7 +30,7 @@ $result = $conn->query($sql);
       <div class="col-md-12">
         <h4>All Users</h4>
         <!-- Display all users table -->
-        <table class="table table-striped">
+        <table class="table table-striped" id="usersTable">
           <thead>
             <tr>
               <th>ID</th>
@@ -39,17 +39,17 @@ $result = $conn->query($sql);
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="usersTableBody">
             <?php
             if ($result->num_rows > 0) {
               while ($row = $result->fetch_assoc()) {
-                echo "<tr>";
+                echo "<tr id='user-row-{$row['id']}'>";
                 echo "<td>" . $row['id'] . "</td>";
                 echo "<td>" . $row['name'] . "</td>";
                 echo "<td>" . $row['email'] . "</td>";
                 echo "<td>
-                        <button class='btn btn-primary btn-sm' onclick='openEditModal(" . json_encode($row) . ")'>Edit</button>
                         <button class='btn btn-danger btn-sm' onclick='deleteUser(" . $row['id'] . ")'>Delete</button>
+                        <button class='btn btn-warning btn-sm' onclick='openEditModal(" . json_encode($row) . ")'>Edit</button>
                       </td>";
                 echo "</tr>";
               }
@@ -206,7 +206,6 @@ $result = $conn->query($sql);
       </div>
       <div class="col-md-4">
         <h4>Delete User</h4>
-        <!-- Delete user functionality is handled by a confirmation dialog and AJAX -->
       </div>
     </div>
   </div>
@@ -228,8 +227,9 @@ $result = $conn->query($sql);
           processData: false,
           contentType: false,
           success: function (response) {
+            let user = JSON.parse(response).users[0];
             $('#addUserModal').modal('hide');
-            location.reload();
+            addUserToTable(user);
           },
           error: function (xhr, status, error) {
             alert('Error: ' + error);
@@ -237,7 +237,6 @@ $result = $conn->query($sql);
         });
       });
 
-      // Edit User Form Submission
       $("#editUserForm").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
@@ -249,8 +248,9 @@ $result = $conn->query($sql);
           processData: false,
           contentType: false,
           success: function (response) {
+            let user = JSON.parse(response).users[0];
             $('#editUserModal').modal('hide');
-            location.reload();
+            updateUserInTable(user);
           },
           error: function (xhr, status, error) {
             alert('Error: ' + error);
@@ -258,6 +258,32 @@ $result = $conn->query($sql);
         });
       });
     });
+
+    function addUserToTable(user) {
+      console.log(user);
+      let newRow = `<tr id='user-row-${user.id}'>
+                      <td>${user.id}</td>
+                      <td>${user.name}</td>
+                      <td>${user.email}</td>
+                      <td>
+                        <button class='btn btn-danger btn-sm' onclick='deleteUser(${user.id})'>Delete</button>
+                        <button class='btn btn-warning btn-sm' onclick='openEditModal(${JSON.stringify(user)})'>Edit</button>
+                      </td>
+                    </tr>`;
+      $("#usersTableBody").append(newRow);
+    }
+
+    function updateUserInTable(user) {
+      console.log(user);
+      let updatedRow = `<td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>
+                          <button class='btn btn-danger btn-sm' onclick='deleteUser(${user.id})'>Delete</button>
+                          <button class='btn btn-warning btn-sm' onclick='openEditModal(${JSON.stringify(user)})'>Edit</button>
+                        </td>`;
+      $(`#user-row-${user.id}`).html(updatedRow);
+    }
 
     function openEditModal(user) {
       $("#edit-id").val(user.id);
@@ -277,9 +303,9 @@ $result = $conn->query($sql);
         $.ajax({
           type: "POST",
           url: "edit_user.php",
-          data: { id: userId , formName : 'delete_user' },
+          data: { id: userId , formName : 'delete_user'},
           success: function (response) {
-            location.reload();
+            $(`#user-row-${userId}`).remove();
           },
           error: function (xhr, status, error) {
             alert('Error: ' + error);

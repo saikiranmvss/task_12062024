@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   $approved = $_POST['approved'];
 
-  // Upload files
+  
   $target_dir = "uploads/";
   $profile_picture_target = $target_dir . basename($profile_picture);
   $signature_target = $target_dir . basename($signature);
